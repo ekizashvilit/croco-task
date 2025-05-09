@@ -1,13 +1,20 @@
 import styled from "styled-components";
+import MainPage from "./pages/MainPage";
 
 function App() {
-	return <Title>hello</Title>;
+	return (
+		<StyledMain>
+			<MainPage />
+		</StyledMain>
+	);
 }
 
-const Title = styled.h1`
-	font-size: 1.5em;
-	text-align: center;
-	color: palevioletred;
+const StyledMain = styled.main`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 8rem;
+	width: 100vw;
 `;
 
 export default App;

@@ -60,56 +60,67 @@ const TasksList = () => {
 	};
 
 	return (
-		<StyledList
-			itemLayout="horizontal"
-			dataSource={tasks}
-			renderItem={(task) => (
-				<List.Item
-					actions={[
-						<Button type="default" icon={<EditOutlined />} key="list-edit" />,
-						<Button
-							type="primary"
-							danger
-							icon={<DeleteOutlined />}
-							key="list-delete"
-						/>,
-					]}
-				>
-					<List.Item.Meta
-						avatar={
-							<Checkbox
-								checked={task.completed}
-								onChange={() => handleToggleComplete(task.id)}
-							/>
-						}
-						title={
-							<Space>
-								<h3 className={`${task.completed ? "task-completed" : ""}`}>
-									{task.title}
-								</h3>
-								<Tag color={priorityColors[task.priority]}>{task.priority}</Tag>
-							</Space>
-						}
-						description={
-							<>
-								<p className={`${task.completed ? "task-completed" : ""}`}>
-									{task.description}
-								</p>
-								<Space className={`${task.completed ? "task-completed" : ""}`}>
-									<CalendarOutlined />
-									<span>{task.date}</span>
+		<>
+			<StyledList
+				header={<h2>Tasks List</h2>}
+				itemLayout="horizontal"
+				dataSource={tasks}
+				renderItem={(task) => (
+					<List.Item
+						actions={[
+							<Button type="default" icon={<EditOutlined />} key="list-edit" />,
+							<Button
+								type="primary"
+								danger
+								icon={<DeleteOutlined />}
+								key="list-delete"
+							/>,
+						]}
+					>
+						<List.Item.Meta
+							avatar={
+								<Checkbox
+									checked={task.completed}
+									onChange={() => handleToggleComplete(task.id)}
+								/>
+							}
+							title={
+								<Space>
+									<h3 className={`${task.completed ? "task-completed" : ""}`}>
+										{task.title}
+									</h3>
+									<Tag color={priorityColors[task.priority]}>
+										{task.priority}
+									</Tag>
 								</Space>
-							</>
-						}
-					/>
-				</List.Item>
-			)}
-		/>
+							}
+							description={
+								<>
+									<p className={`${task.completed ? "task-completed" : ""}`}>
+										{task.description}
+									</p>
+									<Space
+										className={`${task.completed ? "task-completed" : ""}`}
+									>
+										<CalendarOutlined />
+										<span>{task.date}</span>
+									</Space>
+								</>
+							}
+						/>
+					</List.Item>
+				)}
+			/>
+		</>
 	);
 };
 
 const StyledList = styled(List)`
-	padding: 1rem;
+	padding: 0 1rem;
+
+	.ant-list-header {
+		padding-top: 0;
+	}
 
 	.task-completed {
 		text-decoration: line-through;

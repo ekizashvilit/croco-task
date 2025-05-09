@@ -1,14 +1,15 @@
 import styled from "styled-components";
-import MainPageHeader from "../components/MainPageHeader";
+
+import TasksList from "../components/TasksList";
 import TasksControls from "../components/TasksControls";
-import TasksTable from "../components/TasksTable";
+import MainPageHeader from "../components/MainPageHeader";
 
 const MainPage = () => {
 	return (
 		<MainPageWrapper>
 			<MainPageHeader />
 			<TasksControls />
-			<TasksTable />
+			<TasksList />
 		</MainPageWrapper>
 	);
 };

@@ -7,12 +7,17 @@ const { Option } = Select;
 const TasksControls = () => {
 	return (
 		<TasksControlsWrapper>
-			<Search placeholder="Search Tasks" />
+			<Search placeholder="Search Tasks" allowClear />
 			<div>
 				<Select defaultValue="all">
 					<Option value="all">All Tasks</Option>
 					<Option value="completed">Completed</Option>
 					<Option value="active">Active</Option>
+				</Select>
+
+				<Select placeholder="Sort by" allowClear>
+					<Option value="priority">Priority</Option>
+					<Option value="date">Creation Date</Option>
 				</Select>
 
 				<Button type="primary">Add Task</Button>

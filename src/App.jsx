@@ -14,7 +14,6 @@ const StyledMain = styled.main`
 	align-items: center;
 	justify-content: center;
 	margin-top: 8rem;
-	width: 100vw;
 `;
 
 export default App;

@@ -4,7 +4,7 @@ import { Input, Select, Button } from "antd";
 const { Search } = Input;
 const { Option } = Select;
 
-const TasksControls = () => {
+const TasksControls = ({ onAddTaskClick }) => {
 	return (
 		<TasksControlsWrapper>
 			<Search placeholder="Search Tasks" allowClear />
@@ -20,7 +20,9 @@ const TasksControls = () => {
 					<Option value="date">Creation Date</Option>
 				</Select>
 
-				<Button type="primary">Add Task</Button>
+				<Button type="primary" onClick={onAddTaskClick}>
+					Add Task
+				</Button>
 			</div>
 		</TasksControlsWrapper>
 	);

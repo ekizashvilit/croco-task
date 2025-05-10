@@ -1,0 +1,26 @@
+[
+	{
+		"id": 1,
+		"title": "Complete React Assignment",
+		"description": "Finish the task manager application with all requirements",
+		"priority": "high",
+		"completed": false,
+		"date": "2025-05-06"
+	},
+	{
+		"id": 2,
+		"title": "Prepare for Interview",
+		"description": "Review common React interview questions",
+		"priority": "low",
+		"completed": false,
+		"date": "2025-05-07"
+	},
+	{
+		"id": 3,
+		"title": "Read React Documentation",
+		"description": "Go through the hooks section in detail",
+		"priority": "medium",
+		"completed": true,
+		"date": "2025-05-05"
+	}
+]

@@ -25,6 +25,7 @@ export const useTaskModal = () => {
 					title: isEditMode.title,
 					description: isEditMode.description,
 					priority: isEditMode.priority,
+					dueDate: isEditMode.dueDate,
 			  }
 			: null;
 

@@ -1,5 +1,6 @@
+import dayjs from "dayjs";
 import { useEffect } from "react";
-import { Form, Modal } from "antd";
+import { DatePicker, Form, Modal } from "antd";
 
 import { priorityOptions } from "../../constants";
 import DefaultSelect from "../selects/DefaultSelect";
@@ -20,7 +21,11 @@ const TaskFormModal = ({
 	useEffect(() => {
 		if (isOpen) {
 			if (mode === "edit" && initialValues) {
-				form.setFieldsValue(initialValues);
+				const valuesToSet = { ...initialValues };
+				if (initialValues.dueDate) {
+					valuesToSet.dueDate = dayjs(initialValues.dueDate, "YYYY-MM-DD");
+				}
+				form.setFieldsValue(valuesToSet);
 			} else {
 				form.resetFields();
 			}
@@ -31,6 +36,10 @@ const TaskFormModal = ({
 		form
 			.validateFields()
 			.then((values) => {
+				const submissionValues = { ...values };
+				if (values.dueDate) {
+					submissionValues.dueDate = values.dueDate.format("YYYY-MM-DD");
+				}
 				onFormSubmit(values);
 				form.resetFields();
 			})
@@ -78,6 +87,14 @@ const TaskFormModal = ({
 						placeholder="Select task priority"
 						options={priorityOptions}
 					/>
+				</Form.Item>
+
+				<Form.Item
+					name="dueDate"
+					label="Due Date"
+					rules={[{ required: true, message: "Please select a due date" }]}
+				>
+					<DatePicker format="YYYY-MM-DD" />
 				</Form.Item>
 			</Form>
 		</Modal>

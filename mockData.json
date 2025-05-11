@@ -5,7 +5,8 @@
 		"description": "Finish the task manager application with all requirements",
 		"priority": "high",
 		"completed": false,
-		"date": "2025-05-06"
+		"date": "2025-05-06",
+		"dueDate": "2025-05-13"
 	},
 	{
 		"id": 2,
@@ -13,7 +14,8 @@
 		"description": "Review common React interview questions",
 		"priority": "low",
 		"completed": false,
-		"date": "2025-05-07"
+		"date": "2025-05-07",
+		"dueDate": "2025-05-14"
 	},
 	{
 		"id": 3,
@@ -21,6 +23,7 @@
 		"description": "Go through the hooks section in detail",
 		"priority": "medium",
 		"completed": true,
-		"date": "2025-05-05"
+		"date": "2025-05-05",
+		"dueDate": "2025-05-12"
 	}
 ]

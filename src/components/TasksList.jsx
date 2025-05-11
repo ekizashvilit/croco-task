@@ -4,6 +4,7 @@ import {
 	CalendarOutlined,
 	ExclamationCircleFilled,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
 import styled from "styled-components";
 import { List, Checkbox, Tag, Space, Modal } from "antd";
 
@@ -82,7 +83,8 @@ const TasksList = ({ onEditTask }) => {
 										className={`${task.completed ? "task-completed" : ""}`}
 									>
 										<CalendarOutlined />
-										<span>{task.date}</span>
+										<span>Created: {task.date}</span>
+										<span>Due: {dayjs(task.dueDate).format("YYYY-MM-DD")}</span>
 									</Space>
 								</>
 							}

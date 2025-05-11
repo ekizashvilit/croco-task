@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Input, Select, Button } from "antd";
 import { useTaskContext } from "../context/TaskContext";
+import { useState } from "react";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -11,7 +12,10 @@ const TasksControls = ({ onAddTaskClick }) => {
 		setFilterStatus,
 		sortCriteria,
 		setSortCriteria,
+		setSearchTerm,
+		searchTerm,
 	} = useTaskContext();
+	const [inputValue, setInputValue] = useState(searchTerm);
 
 	const handleFilterChange = (value) => {
 		setFilterStatus(value);
@@ -21,9 +25,20 @@ const TasksControls = ({ onAddTaskClick }) => {
 		setSortCriteria(value === undefined ? null : value);
 	};
 
+	const handleSearch = (value) => {
+		setSearchTerm(value);
+	};
+
 	return (
 		<TasksControlsWrapper>
-			<Search placeholder="Search Tasks" allowClear />
+			<Search
+				placeholder="Search Tasks"
+				allowClear
+				onSearch={handleSearch}
+				onChange={(e) => setInputValue(e.target.value)}
+				value={inputValue}
+				onClear={() => setInputValue("")}
+			/>
 			<div>
 				<Select
 					defaultValue="all"

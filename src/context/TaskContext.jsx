@@ -16,6 +16,7 @@ const initialState = {
 	error: null,
 	filterStatus: "all",
 	sortCriteria: null,
+	searchTerm: "",
 };
 
 const taskReducer = (state, action) => {
@@ -62,6 +63,9 @@ const taskReducer = (state, action) => {
 
 		case SET_SORT_CRITERIA:
 			return { ...state, sortCriteria: action.payload };
+
+		case SET_SEARCH_TERM:
+			return { ...state, searchTerm: action.payload };
 
 		default:
 			return state;
@@ -117,27 +121,41 @@ export const TaskProvider = ({ children }) => {
 		dispatch({ type: SET_SORT_CRITERIA, payload: criteria });
 	};
 
-	const filteredTasks = state.tasks.filter((task) => {
-		if (state.filterStatus === "all") {
-			return true;
-		}
-		if (state.filterStatus === "completed") {
-			return task.completed;
-		}
-		if (state.filterStatus === "active") {
-			return !task.completed;
-		}
-		return true;
-	});
+	const setSearchTerm = (term) => {
+		dispatch({ type: SET_SEARCH_TERM, payload: term });
+	};
 
-	let sortedAndFilteredTasks = [...filteredTasks];
+	const processedTasks = state.tasks
+		.filter((task) => {
+			if (state.filterStatus === "completed") {
+				return task.completed;
+			}
+			if (state.filterStatus === "active") {
+				return !task.completed;
+			}
+			return true;
+		})
+		.filter((task) => {
+			if (!state.searchTerm) {
+				return true;
+			}
+
+			const searchTermLowered = state.searchTerm.toLowerCase();
+
+			return (
+				task.title.toLowerCase().includes(searchTermLowered) ||
+				task.description.toLowerCase().includes(searchTermLowered)
+			);
+		});
+
+	let sortedAndProcessedTasks = [...processedTasks];
 	if (state.sortCriteria === "priority") {
 		const priorityOrder = { high: 3, medium: 2, low: 1 };
-		sortedAndFilteredTasks.sort(
+		sortedAndProcessedTasks.sort(
 			(a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]
 		);
 	} else if (state.sortCriteria === "date") {
-		sortedAndFilteredTasks.sort((a, b) => new Date(b.date) - new Date(a.date));
+		sortedAndProcessedTasks.sort((a, b) => new Date(b.date) - new Date(a.date));
 	}
 
 	return (
@@ -150,9 +168,11 @@ export const TaskProvider = ({ children }) => {
 				toggleTaskCompletion,
 				setFilterStatus,
 				setSortCriteria,
-				tasks: sortedAndFilteredTasks,
+				setSearchTerm,
+				tasks: sortedAndProcessedTasks,
 				filterStatus: state.filterStatus,
 				sortCriteria: state.sortCriteria,
+				searchTerm: state.searchTerm,
 				error: state.error,
 			}}
 		>

@@ -2,14 +2,14 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 
 import initialMockTasks from "../../mockData.json";
 
-export const LOAD_TASKS = "LOAD_TASKS";
-export const ADD_TASK = "ADD_TASK";
-export const EDIT_TASK = "EDIT_TASK";
-export const DELETE_TASK = "DELETE_TASK";
-export const TOGGLE_TASK_COMPLETION = "TOGGLE_TASK_COMPLETION";
-export const SET_FILTER_STATUS = "SET_FILTER_STATUS";
-export const SET_SORT_CRITERIA = "SET_SORT_CRITERIA";
-export const SET_SEARCH_TERM = "SET_SEARCH_TERM";
+const LOAD_TASKS = "LOAD_TASKS";
+const ADD_TASK = "ADD_TASK";
+const EDIT_TASK = "EDIT_TASK";
+const DELETE_TASK = "DELETE_TASK";
+const TOGGLE_TASK_COMPLETION = "TOGGLE_TASK_COMPLETION";
+const SET_FILTER_STATUS = "SET_FILTER_STATUS";
+const SET_SORT_CRITERIA = "SET_SORT_CRITERIA";
+const SET_SEARCH_TERM = "SET_SEARCH_TERM";
 
 const initialState = {
 	tasks: [],

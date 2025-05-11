@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 import MainPage from "./pages/MainPage";
 
 function App() {

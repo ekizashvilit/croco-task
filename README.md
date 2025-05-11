@@ -1,12 +1,49 @@
-# React + Vite
+# Task Manager Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple task manager application built with React and Vite.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Node.js (which includes npm) installed on your system. You can download it from [nodejs.org](https://nodejs.org/).
+
+### Installation & Running
+
+1.  **Clone the repository (if applicable) or download the project files.**
+
+2.  **Navigate to the project directory:**
+
+    ```bash
+    cd path/to/your/croco-task
+    ```
+
+3.  **Install dependencies:**
+    Open your terminal in the project root and run:
+
+    ```bash
+    npm install
+    ```
+
+4.  **Start the development server:**
+    Once the dependencies are installed, run:
+
+    ```bash
+    npm run dev
+    ```
+
+    This will start the Vite development server, and you should see output in your terminal indicating the local URL where the application is running (usually `http://localhost:5173` or similar).
+
+5.  **Open the application in your browser:**
+    Open your web browser and navigate to the URL provided in the terminal.
+
+## Available Scripts
+
+In the project directory, you can run:
+
+- `npm run dev`: Runs the app in development mode.
+- `npm run build`: Builds the app for production to the `dist` folder.
+- `npm run lint`: Lints the project files using ESLint.
+- `npm run preview`: Serves the production build locally for preview.

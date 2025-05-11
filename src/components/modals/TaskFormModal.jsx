@@ -1,7 +1,9 @@
-import { Form, Input, Modal, Select } from "antd";
 import { useEffect } from "react";
+import { Form, Modal } from "antd";
 
-const { Option } = Select;
+import { priorityOptions } from "../../constants";
+import DefaultSelect from "../selects/DefaultSelect";
+import DefaultFormInput from "../inputs/DefaultFormInput";
 
 const TaskFormModal = ({
 	isOpen,
@@ -51,34 +53,31 @@ const TaskFormModal = ({
 			destroyOnHidden
 		>
 			<Form form={form} layout="vertical">
-				<Form.Item
+				<DefaultFormInput
 					name="title"
 					label="Task Title"
+					placeholder="Enter task title"
 					rules={[{ required: true, message: "Please enter the task title" }]}
-				>
-					<Input placeholder="Enter task title" />
-				</Form.Item>
+				/>
 
-				<Form.Item
+				<DefaultFormInput
 					name="description"
 					label="Task Description"
+					placeholder="Enter task description"
 					rules={[
 						{ required: true, message: "Please enter the task description" },
 					]}
-				>
-					<Input placeholder="Enter task description" />
-				</Form.Item>
+				/>
 
 				<Form.Item
 					name="priority"
 					label="Priority"
 					rules={[{ required: true, message: "Please select a priority" }]}
 				>
-					<Select placeholder="Select task priority">
-						<Option value="low">Low</Option>
-						<Option value="medium">Medium</Option>
-						<Option value="high">High</Option>
-					</Select>
+					<DefaultSelect
+						placeholder="Select task priority"
+						options={priorityOptions}
+					/>
 				</Form.Item>
 			</Form>
 		</Modal>

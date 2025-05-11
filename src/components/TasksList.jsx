@@ -5,16 +5,11 @@ import {
 	ExclamationCircleFilled,
 } from "@ant-design/icons";
 import styled from "styled-components";
-import { List, Checkbox, Tag, Button, Space, Modal } from "antd";
+import { List, Checkbox, Tag, Space, Modal } from "antd";
 
+import { priorityColors } from "../constants";
 import DefaultButton from "./buttons/DefaultButton";
 import { useTaskContext } from "../context/TaskContext";
-
-const priorityColors = {
-	high: "red",
-	medium: "orange",
-	low: "green",
-};
 
 const TasksList = ({ onEditTask }) => {
 	const { tasks, toggleTaskCompletion, deleteTask } = useTaskContext();

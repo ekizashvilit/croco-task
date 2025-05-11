@@ -1,3 +1,4 @@
+import { arrayMove } from "@dnd-kit/sortable";
 import { createContext, useContext, useEffect, useReducer } from "react";
 
 import initialMockTasks from "../../mockData.json";
@@ -10,6 +11,7 @@ const TOGGLE_TASK_COMPLETION = "TOGGLE_TASK_COMPLETION";
 const SET_FILTER_STATUS = "SET_FILTER_STATUS";
 const SET_SORT_CRITERIA = "SET_SORT_CRITERIA";
 const SET_SEARCH_TERM = "SET_SEARCH_TERM";
+const REORDER_TASKS = "REORDER_TASKS";
 
 const initialState = {
 	tasks: [],
@@ -31,26 +33,27 @@ const taskReducer = (state, action) => {
 		}
 
 		case EDIT_TASK: {
+			const taskIdToEdit = Number(action.payload.id);
 			const updatedTasks = state.tasks.map((task) =>
-				task.id === action.payload.id
-					? { ...task, ...action.payload.data }
-					: task
+				task.id === taskIdToEdit ? { ...task, ...action.payload.data } : task
 			);
 			localStorage.setItem("tasks", JSON.stringify(updatedTasks));
 			return { ...state, tasks: updatedTasks };
 		}
 
 		case DELETE_TASK: {
+			const taskIdToDelete = Number(action.payload);
 			const filteredTasks = state.tasks.filter(
-				(task) => task.id !== action.payload
+				(task) => task.id !== taskIdToDelete
 			);
 			localStorage.setItem("tasks", JSON.stringify(filteredTasks));
 			return { ...state, tasks: filteredTasks };
 		}
 
 		case TOGGLE_TASK_COMPLETION: {
+			const taskIdToToggle = Number(action.payload);
 			const toggledTasks = state.tasks.map((task) =>
-				task.id === action.payload
+				task.id === taskIdToToggle
 					? { ...task, completed: !task.completed }
 					: task
 			);
@@ -66,6 +69,11 @@ const taskReducer = (state, action) => {
 
 		case SET_SEARCH_TERM:
 			return { ...state, searchTerm: action.payload };
+
+		case REORDER_TASKS: {
+			localStorage.setItem("tasks", JSON.stringify(action.payload));
+			return { ...state, tasks: action.payload };
+		}
 
 		default:
 			return state;
@@ -83,6 +91,7 @@ export const TaskProvider = ({ children }) => {
 			if (localTasks) {
 				dispatch({ type: LOAD_TASKS, payload: JSON.parse(localTasks) });
 			} else {
+				dispatch({ type: LOAD_TASKS, payload: initialMockTasks });
 				localStorage.setItem("tasks", JSON.stringify(initialMockTasks));
 			}
 		} catch (error) {
@@ -97,7 +106,6 @@ export const TaskProvider = ({ children }) => {
 			completed: false,
 			date: new Date().toISOString().split("T")[0],
 		};
-
 		dispatch({ type: ADD_TASK, payload: newTask });
 	};
 
@@ -125,6 +133,17 @@ export const TaskProvider = ({ children }) => {
 		dispatch({ type: SET_SEARCH_TERM, payload: term });
 	};
 
+	const reorderTasks = (activeId, overId) => {
+		const currentTasks = state.tasks;
+		const oldIndex = currentTasks.findIndex((task) => task.id === activeId);
+		const newIndex = currentTasks.findIndex((task) => task.id === overId);
+
+		if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+			const reorderedFullTasks = arrayMove(currentTasks, oldIndex, newIndex);
+			dispatch({ type: REORDER_TASKS, payload: reorderedFullTasks });
+		}
+	};
+
 	const processedTasks = state.tasks
 		.filter((task) => {
 			if (state.filterStatus === "completed") {
@@ -139,9 +158,7 @@ export const TaskProvider = ({ children }) => {
 			if (!state.searchTerm) {
 				return true;
 			}
-
 			const searchTermLowered = state.searchTerm.toLowerCase();
-
 			return (
 				task.title.toLowerCase().includes(searchTermLowered) ||
 				task.description.toLowerCase().includes(searchTermLowered)
@@ -169,6 +186,7 @@ export const TaskProvider = ({ children }) => {
 				setFilterStatus,
 				setSortCriteria,
 				setSearchTerm,
+				reorderTasks,
 				tasks: sortedAndProcessedTasks,
 				filterStatus: state.filterStatus,
 				sortCriteria: state.sortCriteria,

@@ -1,19 +1,29 @@
 import {
-	EditOutlined,
-	DeleteOutlined,
-	CalendarOutlined,
-	ExclamationCircleFilled,
-} from "@ant-design/icons";
-import dayjs from "dayjs";
+	SortableContext,
+	verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { List, Modal } from "antd";
 import styled from "styled-components";
-import { List, Checkbox, Tag, Space, Modal } from "antd";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import { restrictToParentElement } from "@dnd-kit/modifiers";
 
-import { priorityColors } from "../constants";
-import DefaultButton from "./buttons/DefaultButton";
+import TaskItem from "./TaskItem";
 import { useTaskContext } from "../context/TaskContext";
+import { useTaskDragAndDrop } from "../hooks/useTaskDragAndDrop";
 
 const TasksList = ({ onEditTask }) => {
-	const { tasks, toggleTaskCompletion, deleteTask } = useTaskContext();
+	const {
+		tasks,
+		toggleTaskCompletion,
+		deleteTask,
+		reorderTasks,
+		setSortCriteria,
+	} = useTaskContext();
+	const { sensors, handleDragEnd } = useTaskDragAndDrop(
+		reorderTasks,
+		setSortCriteria
+	);
 
 	const handleToggleComplete = (taskId) => {
 		toggleTaskCompletion(taskId);
@@ -33,66 +43,35 @@ const TasksList = ({ onEditTask }) => {
 		});
 	};
 
+	const taskItems = tasks.map((task) => ({ ...task, id: String(task.id) }));
+
 	return (
-		<>
-			<StyledList
-				header={<h2>Tasks List</h2>}
-				itemLayout="horizontal"
-				dataSource={tasks}
-				renderItem={(task) => (
-					<List.Item
-						actions={[
-							<DefaultButton
-								type="default"
-								icon={<EditOutlined />}
-								key="list-edit"
-								onClick={() => onEditTask(task)}
-							/>,
-							<DefaultButton
-								type="primary"
-								danger
-								icon={<DeleteOutlined />}
-								key="list-delete"
-								onClick={() => showDeleteConfirm(task.id)}
-							/>,
-						]}
-					>
-						<List.Item.Meta
-							avatar={
-								<Checkbox
-									checked={task.completed}
-									onChange={() => handleToggleComplete(task.id)}
-								/>
-							}
-							title={
-								<Space>
-									<h3 className={`${task.completed ? "task-completed" : ""}`}>
-										{task.title}
-									</h3>
-									<Tag color={priorityColors[task.priority]}>
-										{task.priority}
-									</Tag>
-								</Space>
-							}
-							description={
-								<>
-									<p className={`${task.completed ? "task-completed" : ""}`}>
-										{task.description}
-									</p>
-									<Space
-										className={`${task.completed ? "task-completed" : ""}`}
-									>
-										<CalendarOutlined />
-										<span>Created: {task.date}</span>
-										<span>Due: {dayjs(task.dueDate).format("YYYY-MM-DD")}</span>
-									</Space>
-								</>
-							}
+		<DndContext
+			sensors={sensors}
+			collisionDetection={closestCenter}
+			onDragEnd={handleDragEnd}
+			modifiers={[restrictToParentElement]}
+		>
+			<SortableContext
+				items={taskItems.map((t) => t.id)}
+				strategy={verticalListSortingStrategy}
+			>
+				<StyledList
+					header={<h2>Tasks List</h2>}
+					itemLayout="horizontal"
+					dataSource={taskItems}
+					renderItem={(task) => (
+						<TaskItem
+							key={task.id}
+							task={task}
+							onEditTask={onEditTask}
+							onDeleteTask={showDeleteConfirm}
+							onToggleComplete={handleToggleComplete}
 						/>
-					</List.Item>
-				)}
-			/>
-		</>
+					)}
+				/>
+			</SortableContext>
+		</DndContext>
 	);
 };
 
@@ -106,6 +85,10 @@ const StyledList = styled(List)`
 	.task-completed {
 		text-decoration: line-through;
 		color: #ccc;
+	}
+
+	.ant-list-item {
+		background-color: white;
 	}
 `;
 

@@ -1,7 +1,9 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { Input, Select, Button } from "antd";
+
+import DefaultButton from "./buttons/DefaultButton";
 import { useTaskContext } from "../context/TaskContext";
-import { useState } from "react";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -60,9 +62,9 @@ const TasksControls = ({ onAddTaskClick }) => {
 					<Option value="date">Creation Date</Option>
 				</Select>
 
-				<Button type="primary" onClick={onAddTaskClick}>
+				<DefaultButton type="primary" onClick={onAddTaskClick}>
 					Add Task
-				</Button>
+				</DefaultButton>
 			</div>
 		</TasksControlsWrapper>
 	);

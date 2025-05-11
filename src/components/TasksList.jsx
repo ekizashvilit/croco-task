@@ -7,6 +7,7 @@ import {
 import styled from "styled-components";
 import { List, Checkbox, Tag, Button, Space, Modal } from "antd";
 
+import DefaultButton from "./buttons/DefaultButton";
 import { useTaskContext } from "../context/TaskContext";
 
 const priorityColors = {
@@ -45,13 +46,13 @@ const TasksList = ({ onEditTask }) => {
 				renderItem={(task) => (
 					<List.Item
 						actions={[
-							<Button
+							<DefaultButton
 								type="default"
 								icon={<EditOutlined />}
 								key="list-edit"
 								onClick={() => onEditTask(task)}
 							/>,
-							<Button
+							<DefaultButton
 								type="primary"
 								danger
 								icon={<DeleteOutlined />}

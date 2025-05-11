@@ -7,10 +7,15 @@ export const ADD_TASK = "ADD_TASK";
 export const EDIT_TASK = "EDIT_TASK";
 export const DELETE_TASK = "DELETE_TASK";
 export const TOGGLE_TASK_COMPLETION = "TOGGLE_TASK_COMPLETION";
+export const SET_FILTER_STATUS = "SET_FILTER_STATUS";
+export const SET_SORT_CRITERIA = "SET_SORT_CRITERIA";
+export const SET_SEARCH_TERM = "SET_SEARCH_TERM";
 
 const initialState = {
 	tasks: [],
 	error: null,
+	filterStatus: "all",
+	sortCriteria: null,
 };
 
 const taskReducer = (state, action) => {
@@ -51,6 +56,15 @@ const taskReducer = (state, action) => {
 			localStorage.setItem("tasks", JSON.stringify(toggledTasks));
 			return { ...state, tasks: toggledTasks };
 		}
+
+		case SET_FILTER_STATUS:
+			return { ...state, filterStatus: action.payload };
+
+		case SET_SORT_CRITERIA:
+			return { ...state, sortCriteria: action.payload };
+
+		default:
+			return state;
 	}
 };
 
@@ -95,6 +109,37 @@ export const TaskProvider = ({ children }) => {
 		dispatch({ type: TOGGLE_TASK_COMPLETION, payload: taskID });
 	};
 
+	const setFilterStatus = (status) => {
+		dispatch({ type: SET_FILTER_STATUS, payload: status });
+	};
+
+	const setSortCriteria = (criteria) => {
+		dispatch({ type: SET_SORT_CRITERIA, payload: criteria });
+	};
+
+	const filteredTasks = state.tasks.filter((task) => {
+		if (state.filterStatus === "all") {
+			return true;
+		}
+		if (state.filterStatus === "completed") {
+			return task.completed;
+		}
+		if (state.filterStatus === "active") {
+			return !task.completed;
+		}
+		return true;
+	});
+
+	let sortedAndFilteredTasks = [...filteredTasks];
+	if (state.sortCriteria === "priority") {
+		const priorityOrder = { high: 3, medium: 2, low: 1 };
+		sortedAndFilteredTasks.sort(
+			(a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]
+		);
+	} else if (state.sortCriteria === "date") {
+		sortedAndFilteredTasks.sort((a, b) => new Date(b.date) - new Date(a.date));
+	}
+
 	return (
 		<TaskContext.Provider
 			value={{
@@ -103,7 +148,11 @@ export const TaskProvider = ({ children }) => {
 				editTask,
 				deleteTask,
 				toggleTaskCompletion,
-				tasks: state.tasks,
+				setFilterStatus,
+				setSortCriteria,
+				tasks: sortedAndFilteredTasks,
+				filterStatus: state.filterStatus,
+				sortCriteria: state.sortCriteria,
 				error: state.error,
 			}}
 		>

@@ -1,21 +1,46 @@
 import styled from "styled-components";
 import { Input, Select, Button } from "antd";
+import { useTaskContext } from "../context/TaskContext";
 
 const { Search } = Input;
 const { Option } = Select;
 
 const TasksControls = ({ onAddTaskClick }) => {
+	const {
+		filterStatus,
+		setFilterStatus,
+		sortCriteria,
+		setSortCriteria,
+	} = useTaskContext();
+
+	const handleFilterChange = (value) => {
+		setFilterStatus(value);
+	};
+
+	const handleSortChange = (value) => {
+		setSortCriteria(value === undefined ? null : value);
+	};
+
 	return (
 		<TasksControlsWrapper>
 			<Search placeholder="Search Tasks" allowClear />
 			<div>
-				<Select defaultValue="all">
+				<Select
+					defaultValue="all"
+					value={filterStatus}
+					onChange={handleFilterChange}
+				>
 					<Option value="all">All Tasks</Option>
 					<Option value="completed">Completed</Option>
 					<Option value="active">Active</Option>
 				</Select>
 
-				<Select placeholder="Sort by" allowClear>
+				<Select
+					placeholder="Sort by"
+					allowClear
+					value={sortCriteria}
+					onChange={handleSortChange}
+				>
 					<Option value="priority">Priority</Option>
 					<Option value="date">Creation Date</Option>
 				</Select>

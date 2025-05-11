@@ -2,45 +2,12 @@ import {
 	EditOutlined,
 	DeleteOutlined,
 	CalendarOutlined,
+	ExclamationCircleFilled,
 } from "@ant-design/icons";
-import { useState } from "react";
 import styled from "styled-components";
-import { List, Checkbox, Tag, Button, Space } from "antd";
+import { List, Checkbox, Tag, Button, Space, Modal } from "antd";
 
-const initialTasks = [
-	{
-		id: 1,
-		title: "Complete React Assignment",
-		description: "Finish the task manager application with all requirements",
-		priority: "high",
-		completed: false,
-		date: "2025-05-06",
-	},
-	{
-		id: 2,
-		title: "Prepare for Interview",
-		description: "Review common React interview questions",
-		priority: "high",
-		completed: false,
-		date: "2025-05-07",
-	},
-	{
-		id: 3,
-		title: "Read React Documentation",
-		description: "Go through the hooks section in detail",
-		priority: "medium",
-		completed: true,
-		date: "2025-05-05",
-	},
-	{
-		id: 4,
-		title: "Buy groceries",
-		description: "Milk, eggs, bread, and vegetables",
-		priority: "low",
-		completed: false,
-		date: "2025-05-04",
-	},
-];
+import { useTaskContext } from "../context/TaskContext";
 
 const priorityColors = {
 	high: "red",
@@ -48,15 +15,25 @@ const priorityColors = {
 	low: "green",
 };
 
-const TasksList = () => {
-	const [tasks, setTasks] = useState(initialTasks);
+const TasksList = ({ onEditTask }) => {
+	const { tasks, toggleTaskCompletion, deleteTask } = useTaskContext();
 
 	const handleToggleComplete = (taskId) => {
-		setTasks(
-			tasks.map((task) =>
-				task.id === taskId ? { ...task, completed: !task.completed } : task
-			)
-		);
+		toggleTaskCompletion(taskId);
+	};
+
+	const showDeleteConfirm = (taskId) => {
+		Modal.confirm({
+			title: "Are you sure you want to delete this task?",
+			icon: <ExclamationCircleFilled />,
+			okText: "Delete",
+			okType: "danger",
+			cancelText: "Cancel",
+			centered: true,
+			onOk() {
+				deleteTask(taskId);
+			},
+		});
 	};
 
 	return (
@@ -68,12 +45,18 @@ const TasksList = () => {
 				renderItem={(task) => (
 					<List.Item
 						actions={[
-							<Button type="default" icon={<EditOutlined />} key="list-edit" />,
+							<Button
+								type="default"
+								icon={<EditOutlined />}
+								key="list-edit"
+								onClick={() => onEditTask(task)}
+							/>,
 							<Button
 								type="primary"
 								danger
 								icon={<DeleteOutlined />}
 								key="list-delete"
+								onClick={() => showDeleteConfirm(task.id)}
 							/>,
 						]}
 					>

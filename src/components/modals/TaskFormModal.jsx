@@ -94,7 +94,12 @@ const TaskFormModal = ({
 					label="Due Date"
 					rules={[{ required: true, message: "Please select a due date" }]}
 				>
-					<DatePicker format="YYYY-MM-DD" />
+					<DatePicker
+						format="YYYY-MM-DD"
+						disabledDate={(current) => {
+							return current && current < dayjs().startOf("day");
+						}}
+					/>
 				</Form.Item>
 			</Form>
 		</Modal>

@@ -1,12 +1,13 @@
+import { Input } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
-import { Input, Select, Button } from "antd";
 
 import DefaultButton from "./buttons/DefaultButton";
+import DefaultSelect from "./selects/DefaultSelect";
 import { useTaskContext } from "../context/TaskContext";
+import { filterOptions, sortOptions } from "../constants";
 
 const { Search } = Input;
-const { Option } = Select;
 
 const TasksControls = ({ onAddTaskClick }) => {
 	const {
@@ -42,25 +43,20 @@ const TasksControls = ({ onAddTaskClick }) => {
 				onClear={() => setInputValue("")}
 			/>
 			<div>
-				<Select
+				<DefaultSelect
 					defaultValue="all"
 					value={filterStatus}
 					onChange={handleFilterChange}
-				>
-					<Option value="all">All Tasks</Option>
-					<Option value="completed">Completed</Option>
-					<Option value="active">Active</Option>
-				</Select>
+					options={filterOptions}
+				/>
 
-				<Select
+				<DefaultSelect
 					placeholder="Sort by"
 					allowClear
 					value={sortCriteria}
 					onChange={handleSortChange}
-				>
-					<Option value="priority">Priority</Option>
-					<Option value="date">Creation Date</Option>
-				</Select>
+					options={sortOptions}
+				/>
 
 				<DefaultButton type="primary" onClick={onAddTaskClick}>
 					Add Task

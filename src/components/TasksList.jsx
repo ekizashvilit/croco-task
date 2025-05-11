@@ -2,15 +2,16 @@ import {
 	SortableContext,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { List, Modal } from "antd";
-import styled from "styled-components";
+import { Modal } from "antd";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import TaskItem from "./TaskItem";
 import { useTaskContext } from "../context/TaskContext";
 import { useTaskDragAndDrop } from "../hooks/useTaskDragAndDrop";
+import { StyledList } from "../styles/TasksList.styles";
 
 const TasksList = ({ onEditTask }) => {
 	const {
@@ -53,43 +54,26 @@ const TasksList = ({ onEditTask }) => {
 			modifiers={[restrictToParentElement]}
 		>
 			<SortableContext
-				items={taskItems.map((t) => t.id)}
+				items={taskItems.map((task) => task.id)}
 				strategy={verticalListSortingStrategy}
 			>
-				<StyledList
-					header={<h2>Tasks List</h2>}
-					itemLayout="horizontal"
-					dataSource={taskItems}
-					renderItem={(task) => (
-						<TaskItem
-							key={task.id}
-							task={task}
-							onEditTask={onEditTask}
-							onDeleteTask={showDeleteConfirm}
-							onToggleComplete={handleToggleComplete}
-						/>
-					)}
-				/>
+				<StyledList header={<h2>Tasks List</h2>} itemLayout="horizontal">
+					<TransitionGroup component={null}>
+						{tasks.map((task) => (
+							<CSSTransition key={task.id} timeout={300} classNames="task-item">
+								<TaskItem
+									task={{ ...task, id: String(task.id) }}
+									onEditTask={onEditTask}
+									onDeleteTask={showDeleteConfirm}
+									onToggleComplete={handleToggleComplete}
+								/>
+							</CSSTransition>
+						))}
+					</TransitionGroup>
+				</StyledList>
 			</SortableContext>
 		</DndContext>
 	);
 };
-
-const StyledList = styled(List)`
-	padding: 0 1rem;
-
-	.ant-list-header {
-		padding-top: 0;
-	}
-
-	.task-completed {
-		text-decoration: line-through;
-		color: #ccc;
-	}
-
-	.ant-list-item {
-		background-color: white;
-	}
-`;
 
 export default TasksList;

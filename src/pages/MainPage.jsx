@@ -2,31 +2,23 @@ import { Divider } from "antd";
 import styled from "styled-components";
 
 import TasksList from "../components/TasksList";
+import { useTaskModal } from "../hooks/useTaskModal";
 import TasksControls from "../components/TasksControls";
+import { useTaskContext } from "../context/TaskContext";
 import MainPageHeader from "../components/MainPageHeader";
 import TaskFormModal from "../components/modals/TaskFormModal";
-import { useState } from "react";
-import { useTaskContext } from "../context/TaskContext";
 
 const MainPage = () => {
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isEditMode, setIsEditMode] = useState(null);
 	const { addTask, editTask } = useTaskContext();
-
-	const handleOpenAddModal = () => {
-		setIsEditMode(null);
-		setIsModalOpen(true);
-	};
-
-	const handleOpenEditModal = (task) => {
-		setIsEditMode(task);
-		setIsModalOpen(true);
-	};
-
-	const handleModalCancel = () => {
-		setIsModalOpen(false);
-		setIsEditMode(null);
-	};
+	const {
+		closeModal,
+		getInitialValues,
+		getModalMode,
+		isEditMode,
+		isModalOpen,
+		openAddModal,
+		openEditModal,
+	} = useTaskModal();
 
 	const handleFormSubmit = (values) => {
 		if (isEditMode) {
@@ -34,33 +26,24 @@ const MainPage = () => {
 		} else {
 			addTask(values);
 		}
-		setIsModalOpen(false);
-		setIsEditMode(null);
+		closeModal();
 	};
 
 	return (
 		<MainPageWrapper>
 			<MainPageHeader />
 			<Divider size="middle" />
-			<TasksControls onAddTaskClick={handleOpenAddModal} />
+			<TasksControls onAddTaskClick={openAddModal} />
 			<Divider size="middle" />
-			<TasksList onEditTask={handleOpenEditModal} />
+			<TasksList onEditTask={openEditModal} />
 			{isModalOpen && (
 				<TaskFormModal
 					key={isEditMode ? `edit-${isEditMode.id}` : "add"}
 					isOpen={isModalOpen}
-					onCancel={handleModalCancel}
+					onCancel={closeModal}
 					onFormSubmit={handleFormSubmit}
-					mode={isEditMode ? "edit" : "add"}
-					initialValues={
-						isEditMode
-							? {
-									title: isEditMode.title,
-									description: isEditMode.description,
-									priority: isEditMode.priority,
-							  }
-							: null
-					}
+					mode={getModalMode()}
+					initialValues={getInitialValues()}
 				/>
 			)}
 		</MainPageWrapper>
